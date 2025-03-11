@@ -7,23 +7,24 @@ export const Peticion = ({ nombre }) => {
     const peticion = async () => {
         let response = await fetch(`https://api.potterdb.com/v1/characters?filter[name]=${nombre}`)
         let data = await response.json()
-        console.log(data.data)
-        setValor(data.data)
+
+        const resultados = data.data.filter((element) =>
+            element.attributes.name.toLowerCase() === nombre.toLowerCase()
+        )
+        
+        setValor(resultados)
     }
+
     useEffect(() => {
-        peticion()
+       if (nombre !== "") peticion()
     }, [nombre])
 
     return<>
-            {valor.map((element, index)=>{
-                return <div key={index}>
-                    <h3>{element.name}</h3>
-                </div>
-
-            })}
-
-        </>
-
-    
-
+        {valor.map((element, index) => {
+            return <div key={index}>
+                <h3>{element.attributes.name}</h3>
+                <img src={element.attributes.image} alt="" />
+            </div>
+        })}
+    </>
 }
